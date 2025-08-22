@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One China Airways - Interactive Investment Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Crimson and Gold on Parchment -->
+    <!-- Application Structure Plan: A thematic, single-page dashboard design was chosen over a linear slide format to empower investors to explore information non-linearly. The structure includes a sticky navigation for easy access, an initial "Opportunity Dashboard" for high-impact metrics, an interactive map for market exploration, and a dynamic financial chart to compare investment scenarios. This user-centric design facilitates quicker comprehension and deeper engagement with the core value proposition. -->
+    <!-- Visualization & Content Choices: 
+        - Opportunity Metrics -> Goal: Inform -> Dynamic Counters -> Interaction: On-scroll animation -> Justification: Immediately grabs attention with key value stats. -> Method: HTML/CSS/JS.
+        - Financial Projections -> Goal: Compare -> Interactive Bar/Line Chart -> Interaction: User selects between '1 Aircraft Start' and '2 Aircraft Start' to dynamically update the chart and summary data. -> Justification: Allows direct comparison of the two investment scenarios, making complex financial data easy to digest. -> Library: Chart.js.
+        - Risk Analysis -> Goal: Organize -> Accordion -> Interaction: Click to expand/collapse -> Justification: Presents dense information in a clean, manageable format without overwhelming the user. -> Method: HTML/CSS/JS.
+        - Team Section -> Goal: Inform -> Profile Cards -> Interaction: Static -> Justification: Clean, professional presentation of the leadership team to build credibility. -> Method: HTML/CSS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF6;
+            color: #333333;
+        }
+        .accent-red { color: #A42424; }
+        .bg-accent-red { background-color: #A42424; }
+        .accent-gold { color: #D4AF37; }
+        .bg-accent-gold { background-color: #D4AF37; }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #A42424;
+        }
+        .stat-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .active .accordion-content {
+            max-height: 500px;
+        }
+        .active .accordion-icon {
+            transform: rotate(45deg);
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="text-2xl font-bold accent-red">ONE CHINA AIRWAYS</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#opportunity" class="nav-link font-medium">The Opportunity</a>
+                <a href="#market" class="nav-link font-medium">Market Edge</a>
+                <a href="#financials" class="nav-link font-medium">Financials</a>
+                <a href="#team" class="nav-link font-medium">The Team</a>
+                <a href="#risks" class="nav-link font-medium">Risks</a>
+            </div>
+            <a href="#contact" class="hidden md:block bg-accent-red text-white font-bold py-2 px-4 rounded-lg hover:bg-red-800 transition-colors">Invest Now</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 md:py-32 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight accent-red">A Direct Route to Global</h1>
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight accent-red mt-2">Air Cargo Dominance</h1>
+                <p class="mt-6 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">Pioneering direct air freight from the world's #1 cargo hub, Hong Kong, to connect China with the world's fastest-growing markets.</p>
+            </div>
+        </section>
+
+        <section id="opportunity" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold accent-red">The Trillion-Dollar Opportunity</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">This section outlines the core market inefficiency we are built to solve. We are addressing a structural capacity deficit in China's logistics, creating a strategic investment opportunity aligned with global economic trends.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-4 accent-red">The Problem: A Capacity Gap</h3>
+                        <p class="text-gray-600 leading-relaxed">China, the world's largest exporter, faces a critical logistics bottleneck. Its manufacturing prowess outpaces its air cargo capacity, leading to an over-reliance on foreign carriers. This system creates costly and time-consuming inefficiencies, routing goods through indirect transit hubs and hindering China's ability to control its own global supply chain.</p>
+                    </div>
+                    <div class="bg-accent-red text-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-4">The Solution: One China Airways</h3>
+                        <p class="leading-relaxed">We provide the solution: a new, all-cargo, long-haul airline based in Hong Kong. By establishing direct routes to emerging markets in Africa and Europe, we strengthen China's global supply chain, reduce shipping times, cut costs, and capture a significant share of a rapidly expanding market.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 text-center">
+                    <div class="stat-card bg-white p-6 rounded-xl shadow-lg">
+                        <p class="text-4xl font-bold accent-gold">>4%</p>
+                        <p class="mt-2 text-gray-600 font-medium">Annual Air Cargo Growth Projected for 20 Years</p>
+                    </div>
+                    <div class="stat-card bg-white p-6 rounded-xl shadow-lg">
+                        <p class="text-4xl font-bold accent-gold">720+</p>
+                        <p class="mt-2 text-gray-600 font-medium">Additional Freighters Needed by China in 2 Decades</p>
+                    </div>
+                    <div class="stat-card bg-white p-6 rounded-xl shadow-lg">
+                        <p class="text-4xl font-bold accent-gold">16-25%</p>
+                        <p class="mt-2 text-gray-600 font-medium">Proven Cost Savings on Our Direct Routes vs. Hubs</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="market" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold accent-red">Our Unique Market Edge</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">This section details the five pillars of our competitive advantage. These elements combine to create a defensible business model with a clear path to market leadership, designed to capture value in underserved, high-growth trade lanes.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="stat-card p-6 bg-gray-50 rounded-lg">
+                        <h3 class="text-xl font-bold mb-2 accent-red">Direct Connectivity</h3>
+                        <p class="text-gray-600">We bypass inefficient transit hubs, offering faster, more reliable service that cuts delivery times and complexity.</p>
+                    </div>
+                    <div class="stat-card p-6 bg-gray-50 rounded-lg">
+                        <h3 class="text-xl font-bold mb-2 accent-red">The Hong Kong Advantage</h3>
+                        <p class="text-gray-600">Operating from the world's #1 cargo hub provides access to unparalleled infrastructure and regulatory protection.</p>
+                    </div>
+                    <div class="stat-card p-6 bg-gray-50 rounded-lg">
+                        <h3 class="text-xl font-bold mb-2 accent-red">Authentic Chinese Branding</h3>
+                        <p class="text-gray-600">Our brand is tailored to resonate with China's freight community, ensuring deep market penetration and strong partnerships.</p>
+                    </div>
+                    <div class="stat-card p-6 bg-gray-50 rounded-lg">
+                        <h3 class="text-xl font-bold mb-2 accent-red">Optimal Aircraft Fleet</h3>
+                        <p class="text-gray-600">The Boeing 747-800F offers the lowest tonne-mile cost, superior payload capacity, and unmatched reliability.</p>
+                    </div>
+                    <div class="stat-card p-6 bg-gray-50 rounded-lg">
+                        <h3 class="text-xl font-bold mb-2 accent-red">Proven Market Demand</h3>
+                        <p class="text-gray-600">With over 60 Letters of Intent secured, we have tangible proof of strong market interest before launch.</p>
+                    </div>
+                     <div class="stat-card p-6 bg-gray-50 rounded-lg">
+                        <h3 class="text-xl font-bold mb-2 accent-red">Dedicated Cargo Model</h3>
+                        <p class="text-gray-600">Our focus on an all-cargo model provides schedule stability and capacity that passenger "belly" cargo cannot match.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold accent-red">Financial Projections & The Ask</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">This interactive chart presents our financial outlook. You can toggle between our two startup scenarios to see the projected Net Operating Profit After Tax (NOPAT) and Return on Investment (ROI) over the first five years of operation.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <div class="flex justify-center mb-6 space-x-4">
+                        <button id="optionA" class="scenario-btn bg-gray-200 text-gray-800 font-bold py-2 px-6 rounded-lg transition-colors">1-Aircraft Start</button>
+                        <button id="optionB" class="scenario-btn bg-accent-red text-white font-bold py-2 px-6 rounded-lg transition-colors">2-Aircraft Start</button>
+                    </div>
+                    <div class="grid md:grid-cols-4 gap-4 text-center mb-8">
+                        <div>
+                            <p class="text-sm text-gray-500">Financing Sought</p>
+                            <p id="ask" class="text-2xl font-bold accent-red">$105M</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Projected Breakeven</p>
+                            <p id="breakeven" class="text-2xl font-bold accent-red">Year 2</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">6-Year Avg. ROI</p>
+                            <p id="aroi" class="text-2xl font-bold accent-red">18%</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Year 5 Terminal Value</p>
+                            <p id="terminalValue" class="text-2xl font-bold accent-red">$487M+</p>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="financialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="team" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold accent-red">World-Class Leadership</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">This project is led by a team of seasoned aviation and finance executives. Their collective experience from industry giants and major regulatory bodies provides the expertise needed to navigate the complexities of launching a global airline.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="text-center">
+                        <div class="w-32 h-32 mx-auto bg-gray-200 rounded-full mb-4 flex items-center justify-center"><span class="text-gray-500">Photo</span></div>
+                        <h4 class="font-bold text-lg">Captain Hrvoje Zubek & Jonathan Keady</h4>
+                        <p class="text-sm accent-red font-medium">CEO & Chairman</p>
+                        <p class="text-sm text-gray-600 mt-2">Founders with 6+ years of collaboration in airline startups and aviation consulting for major international bodies.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-32 h-32 mx-auto bg-gray-200 rounded-full mb-4 flex items-center justify-center"><span class="text-gray-500">Photo</span></div>
+                        <h4 class="font-bold text-lg">Mr. Sandy Cheung</h4>
+                        <p class="text-sm accent-red font-medium">China Commercial Executive</p>
+                        <p class="text-sm text-gray-600 mt-2">40+ years of logistics experience in China and Africa, with senior roles at Panalpina.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-32 h-32 mx-auto bg-gray-200 rounded-full mb-4 flex items-center justify-center"><span class="text-gray-500">Photo</span></div>
+                        <h4 class="font-bold text-lg">Mr. Jun CS Au</h4>
+                        <p class="text-sm accent-red font-medium">Chief Operations Officer</p>
+                        <p class="text-sm text-gray-600 mt-2">30+ years of experience including senior management roles at Cathay Pacific, such as Head of Engineering.</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-32 h-32 mx-auto bg-gray-200 rounded-full mb-4 flex items-center justify-center"><span class="text-gray-500">Photo</span></div>
+                        <h4 class="font-bold text-lg">Mr. Alex Kai Hing</h4>
+                        <p class="text-sm accent-red font-medium">Chief Financial Officer</p>
+                        <p class="text-sm text-gray-600 mt-2">International tax specialist with extensive experience from KPMG's financial services tax team.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="risks" class="py-20">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold accent-red">Risk Management & Mitigation</h2>
+                    <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">We have a proactive and comprehensive risk management strategy. This section details our approach to potential challenges, demonstrating our preparedness to ensure operational stability and protect investor capital.</p>
+                </div>
+                <div class="max-w-4xl mx-auto space-y-4">
+                    <div class="accordion-item bg-white rounded-lg shadow-md">
+                        <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold">
+                            Fluctuating Operating Costs
+                            <span class="accordion-icon text-2xl accent-red font-thin">+</span>
+                        </button>
+                        <div class="accordion-content px-5 pb-5">
+                            <p class="text-gray-600">This is addressed through a dynamic Fuel Surcharge (FSC) mechanism levied on all air shipments. This industry-standard practice effectively passes volatile fuel cost increases directly to the customer, protecting our margins.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-white rounded-lg shadow-md">
+                        <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold">
+                            Client Creditworthiness
+                             <span class="accordion-icon text-2xl accent-red font-thin">+</span>
+                        </button>
+                        <div class="accordion-content px-5 pb-5">
+                            <p class="text-gray-600">All clients are managed through the IATA Cargo Account Settlement Systems (CASS). This system requires financial vetting and security deposits from clients, which significantly mitigates non-payment and late-payment risks.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-white rounded-lg shadow-md">
+                        <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold">
+                            Geopolitical Volatility
+                             <span class="accordion-icon text-2xl accent-red font-thin">+</span>
+                        </button>
+                        <div class="accordion-content px-5 pb-5">
+                            <p class="text-gray-600">Air cargo is inherently less sensitive to geopolitical tensions than passenger travel. Our base in Hong Kong offers a stable and legally protected jurisdiction. Furthermore, our flexible network allows us to pivot routes if a specific region becomes unstable.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-white rounded-lg shadow-md">
+                        <button class="accordion-header w-full flex justify-between items-center p-5 text-left font-semibold">
+                            Market Competition
+                             <span class="accordion-icon text-2xl accent-red font-thin">+</span>
+                        </button>
+                        <div class="accordion-content px-5 pb-5">
+                            <p class="text-gray-600">Our primary competitive advantage is our unique direct route strategy, which is difficult for hub-and-spoke carriers to replicate efficiently. This, combined with our strong Chinese branding, local partnerships, and regulatory protections in Hong Kong, creates a strong defensive moat.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact" class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold">Join Us in Redefining Global Logistics</h2>
+            <p class="mt-4 max-w-2xl mx-auto">One China Airways is more than an airline; it's a strategic investment in the future of global trade. We invite you to be part of this pioneering venture.</p>
+            <div class="mt-8">
+                <a href="mailto:invest@onechinaairways.com" class="bg-accent-red text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-red-800 transition-colors">Contact Us to Invest</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const financialData = {
+                optionA: {
+                    labels: ['Year 0 (Pre-Op)', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+                    nopat: [-14.06, -13.61, 0.02, 22.23, 44.00, 76.23],
+                    roi: [-48, -17, 0, 21, 42, 73],
+                    ask: '$105M',
+                    breakeven: 'Year 2',
+                    aroi: '12%',
+                    terminalValue: '$485M+'
+                },
+                optionB: {
+                    labels: ['Year 0 (Pre-Op)', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Year 5'],
+                    nopat: [-16.18, -17.92, 5.95, 34.57, 58.95, 76.25],
+                    roi: [-40, -20, 6, 33, 56, 73],
+                    ask: '$105M',
+                    breakeven: 'Year 2',
+                    aroi: '18%',
+                    terminalValue: '$487M+'
+                }
+            };
+
+            const ctx = document.getElementById('financialChart').getContext('2d');
+            let financialChart;
+
+            function createOrUpdateChart(option) {
+                const data = financialData[option];
+                
+                document.getElementById('ask').textContent = data.ask;
+                document.getElementById('breakeven').textContent = data.breakeven;
+                document.getElementById('aroi').textContent = data.aroi;
+                document.getElementById('terminalValue').textContent = data.terminalValue;
+
+                if (financialChart) {
+                    financialChart.destroy();
+                }
+
+                financialChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'NOPAT ($M)',
+                            data: data.nopat,
+                            backgroundColor: data.nopat.map(v => v < 0 ? 'rgba(164, 36, 36, 0.7)' : 'rgba(212, 175, 55, 0.7)'),
+                            borderColor: data.nopat.map(v => v < 0 ? '#A42424' : '#D4AF37'),
+                            borderWidth: 1,
+                            yAxisID: 'y',
+                        }, {
+                            label: 'ROI (%)',
+                            data: data.roi,
+                            type: 'line',
+                            borderColor: '#333333',
+                            backgroundColor: 'transparent',
+                            tension: 0.3,
+                            yAxisID: 'y1',
+                            pointBackgroundColor: '#333333',
+                            pointRadius: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'NOPAT ($ Millions)'
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'ROI (%)'
+                                },
+                                grid: {
+                                    drawOnChartArea: false,
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            },
+                            legend: {
+                                position: 'top',
+                            }
+                        },
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    }
+                });
+            }
+
+            const optionAButton = document.getElementById('optionA');
+            const optionBButton = document.getElementById('optionB');
+            const scenarioButtons = document.querySelectorAll('.scenario-btn');
+
+            optionAButton.addEventListener('click', () => {
+                createOrUpdateChart('optionA');
+                scenarioButtons.forEach(btn => btn.classList.remove('bg-accent-red', 'text-white'));
+                scenarioButtons.forEach(btn => btn.classList.add('bg-gray-200', 'text-gray-800'));
+                optionAButton.classList.add('bg-accent-red', 'text-white');
+                optionAButton.classList.remove('bg-gray-200', 'text-gray-800');
+            });
+
+            optionBButton.addEventListener('click', () => {
+                createOrUpdateChart('optionB');
+                scenarioButtons.forEach(btn => btn.classList.remove('bg-accent-red', 'text-white'));
+                scenarioButtons.forEach(btn => btn.classList.add('bg-gray-200', 'text-gray-800'));
+                optionBButton.classList.add('bg-accent-red', 'text-white');
+                optionBButton.classList.remove('bg-gray-200', 'text-gray-800');
+            });
+
+            createOrUpdateChart('optionB');
+
+            const accordionItems = document.querySelectorAll('.accordion-item');
+            accordionItems.forEach(item => {
+                const header = item.querySelector('.accordion-header');
+                header.addEventListener('click', () => {
+                    const currentlyActive = document.querySelector('.accordion-item.active');
+                    if (currentlyActive && currentlyActive !== item) {
+                        currentlyActive.classList.remove('active');
+                    }
+                    item.classList.toggle('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
